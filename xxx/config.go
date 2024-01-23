@@ -4,7 +4,9 @@ import (
 	"crypto/md5"
 	"fmt"
 	"io"
+	"log/slog"
 	"math/rand"
+	"strings"
 	"sync"
 
 	pb "github.com/DazWilkin/Aetos/protos"
@@ -59,6 +61,11 @@ func (c *Config) Set(rqst *pb.AetosPublishRequest) error {
 		return fmt.Errorf("too many metrics (max: %d)", c.NumMetrics)
 	}
 
+	slog.Info("Set",
+		"labels", strings.Join(rqst.Labels, ","),
+		"metrics", strings.Join(rqst.Metrics, ","),
+	)
+
 	mu.Lock()
 	c.labels = rqst.Labels
 	c.metrics = rqst.Metrics
@@ -106,7 +113,7 @@ func (c *Config) Metrics() []prometheus.Metric {
 				// Want the same label values across different metrics
 				// hash some combination of the label name and the cardinality
 				value := fmt.Sprintf("%s-%d", c.labels[k], j)
-				labelValues[k] = hash(value)
+				labelValues[k] = value // hash(value)
 			}
 
 			result[i*int(c.Cardinality)+int(j)] = prometheus.MustNewConstMetric(
