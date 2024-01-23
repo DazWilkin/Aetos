@@ -131,7 +131,7 @@ aetos_collector_foo{a="a-2",b="b-2",c="c-2"} 0.1317955488606491
 ### Jsonnet
 
 ```bash
-IMAGE="ghcr.io/dazwilkin/aetos:65fd4ba6e663778d0a856253f083250bc0d6bcd8"
+IMAGE="ghcr.io/dazwilkin/aetos:a31b5d7e82485e97a4f964f61fe058620978a0ca"
 PORT="8080"
 
 # Revise
@@ -180,7 +180,7 @@ prom/prometheus \
 ```bash
 cosign verify \
 --key=./cosign.pub \
-ghcr.io/dazwilkin/aetos:65fd4ba6e663778d0a856253f083250bc0d6bcd8
+ghcr.io/dazwilkin/aetos:a31b5d7e82485e97a4f964f61fe058620978a0ca
 ```
 
 > **NOTE** `cosign.pub` may be downloaded [here](./cosign.pub)
