@@ -1,9 +1,10 @@
 local image = std.extVar("image");
-local port = std.extVar("port");
+local port = std.parseInt(std.extVar("port"));
 
-local cardinality = std.extVar("cardinality");
-local labels = std.extVar("labels");
-local metrics = std.extVar("metrics");
+local cardinality = "--cardinality=" + std.extVar("cardinality");
+local endpoint = "--endpoint=0.0.0.0:" + std.extVar("port");
+local labels = "--labels=" + std.extVar("labels");
+local metrics = "--metrics=" + std.extVar("metrics");
 
 {
     "kind": "List",
@@ -35,10 +36,10 @@ local metrics = std.extVar("metrics");
               "containers": [
                 {
                   "args": [
-                    "--cardinality="+ cardinality,
-                    "--endpoint=0.0.0.0:" + port,
-                    "--labels=" + labels,
-                    "--metrics=" + metrics
+                    cardinality,
+                    endpoint,
+                    labels,
+                    metrics
                   ],
                   "image": image,
                   "imagePullPolicy": "IfNotPresent",
@@ -46,7 +47,7 @@ local metrics = std.extVar("metrics");
                   "ports": [
                     {
                       "name": "metrics",
-                      "containerPort": std.parseInt(port),
+                      "containerPort": port,
                       "protocol": "TCP"
                     }
                   ],
@@ -73,7 +74,7 @@ local metrics = std.extVar("metrics");
           "ports": [
             {
               "name": "metrics",
-              "port": std.parseInt(port),
+              "port": port,
               "protocol": "TCP",
               "targetPort": "metrics"
             }
@@ -101,6 +102,26 @@ local metrics = std.extVar("metrics");
               "port": "metrics",
             }
           ]
+        }
+      },
+      {
+        "kind": "VerticalPodAutoscaler",
+        "apiVersion": "autoscaling.k8s.io/v1",
+        "metadata": {
+          "name": "aetos",
+          "labels": {
+            "app": "aetos",
+          }
+        },
+        "spec": {
+          "targetRef": {
+            "kind": "Deployment",
+            "apiVersion": "apps/v1",
+            "name": "aetos"
+          },
+          "updatePolicy": {
+            "updateMode": "Off"
+          }
         }
       }
     ]
