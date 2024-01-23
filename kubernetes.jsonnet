@@ -51,7 +51,23 @@ local metrics = "--metrics=" + std.extVar("metrics");
                       "protocol": "TCP"
                     }
                   ],
-                  "resources": {}
+                  "resources": {
+                    "limits": {
+                      "memory": "500Mi"
+                    },
+                    "requests":{
+                      "cpu": "250m",
+                      "memory": "250Mi"
+                    }
+                  },
+                  "securityContext": {
+                    "allowPrivilegeEscalation": false,
+                    "privileged": false,
+                    "readOnlyRootFilesystem": true,
+                    "runAsGroup": 1000,
+                    "runAsNonRoot": true,
+                    "runAsUser": 1000,
+                  }
                 }
               ]
             }
