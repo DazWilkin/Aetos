@@ -4,20 +4,28 @@
 
 Named after the eagle that tested Prometheus.
 
-An exporter intended for testing Prometheus that can be configured dynamically (by `POST`'ing to its `/publish` endpoint see [publish](#publish)) to generate metrics with labels with random values
+An exporter intended for testing PromQL queries. The exporter is configured dynamically (by `POST`'ing to its `/publish` endpoint see [publish](#publish)) to generate a set of gauge metrics with a set of labels with predictable labels values and random measurement values.
 
-## Proto
+![Prometheus](./prometheus.png)
+
+## Important
+
+Upon launch Aetos
+
+## protoc
 
 ```bash
 MODULE="github.com/DazWilkin/Aetos"
 protoc \
---proto_path=${PWD}/protos \
+--proto_path=${PWD} \
 --go_out=${PWD} \
 --go_opt=module=${MODULE} \
-${PWD}/protos/aetos.proto
+${PWD}/api/v1alpha1/aetos.proto
 ```
 
 ## Run
+
+### Local
 
 ```bash
 go run github.com/DazWilkin/Aetos/cmd \
@@ -26,6 +34,68 @@ go run github.com/DazWilkin/Aetos/cmd \
 --labels=3 \
 --metrics=3 \
 --path=/metrics
+```
+
+### Podman
+
+```bash
+IMAGE="ghcr.io/dazwilkin/aetos:a31b5d7e82485e97a4f964f61fe058620978a0ca"
+PORT="8080"
+
+# Revise
+CARDINALITY="3" # Max  10
+LABELS="3"      # Max   5
+METRICS="3"     # Max 250
+
+podman run \
+--interactive --tty --rm \
+--publish=${PORT}:8080 \
+${IMAGE} \
+--cardinality=${CARDINALITY} \
+--endpoint="0.0.0.0:8080" \
+--labels=${LABELS} \
+--metrics=${METRICS}
+```
+
+### Kubernetes
+
+Uses [Jsonnet](https://jsonnet.org/) to generate the Kubernetes config.
+
+```bash
+IMAGE="ghcr.io/dazwilkin/aetos:a31b5d7e82485e97a4f964f61fe058620978a0ca"
+PORT="8080"
+
+# Revise
+CARDINALITY="3" # Max  10
+LABELS="3"      # Max   5
+METRICS="3"     # Max 250
+
+NAMESPACE="aetos"
+
+kubectl create namespace ${NAMESPACE}
+
+jsonnet \
+  ./kubernetes.jsonnet \
+  --ext-str image="${IMAGE}" \
+  --ext-str port="${PORT}" \
+  --ext-str cardinality="${CARDINALITY}" \
+  --ext-str labels="${LABELS}" \
+  --ext-str metrics="${METRICS}" \
+| kubectl apply \
+  --filename=- \
+  --namespace=${NAMESPACE}
+```
+
+Confirm the deployment is successful:
+
+```bash
+kubectl get pod \
+--selector=app=aetos \
+--namespace=${NAMESPACE} \
+--output=jsonpath="{.items[0].status.containerStatuses[0].ready}"
+```
+```console
+true
 ```
 
 ## API
@@ -126,33 +196,6 @@ aetos_collector_foo{a="a-1",b="b-1",c="c-1"} 0.9076335347948783
 aetos_collector_foo{a="a-2",b="b-2",c="c-2"} 0.1317955488606491
 ```
 
-## Kubernetes
-
-### Jsonnet
-
-```bash
-IMAGE="ghcr.io/dazwilkin/aetos:a31b5d7e82485e97a4f964f61fe058620978a0ca"
-PORT="8080"
-
-# Revise
-CARDINALITY="3" # Max  10
-LABELS="3"      # Max   5
-METRICS="3"     # Max 250
-
-NAMESPACE="aetos"
-
-jsonnet \
-  ./kubernetes.jsonnet \
-  --ext-str image="${IMAGE}" \
-  --ext-str port="${PORT}" \
-  --ext-str cardinality="${CARDINALITY}" \
-  --ext-str labels="${LABELS}" \
-  --ext-str metrics="${METRICS}" \
-| kubectl apply \
-  --filename=- \
-  --namespace=${NAMESPACE}
-```
-
 ## Prometheus
 
 ### Operator
@@ -171,6 +214,23 @@ podman run \
 prom/prometheus \
 --web.config.file=/etc/prometheus/prometheus.yml \
 --web.listen-address="0.0.0.0:${PORT}
+```
+
+## Tailscale
+
+If you're using Tailscale [Kubernetes operator](https://tailscale.com/kb/1236/kubernetes-operator), you can expose Aetos to your Tailnet by applying [`tailscale.jsonnet`](./tailscale.jsonnet):
+
+```bash
+HOST="..."
+PORT="8080"
+
+jsonnet \
+  ./tailscale.jsonnet \
+  --ext-str host=${HOST} \
+  --ext-str port=${PORT} \
+| kubectl apply \
+  --filename=- \
+  --namespace=${NAMESPACE}
 ```
 
 ## Sigstore
