@@ -136,6 +136,10 @@ ghcr.io/dazwilkin/aetos:1234567890123456789012345678901234567890
 
 To install `cosign`, e.g.:
 
+```bash
+go install github.com/sigstore/cosign/cmd/cosign@latest
+```
+
 
 <hr/>
 <br/>
