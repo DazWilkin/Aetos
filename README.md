@@ -129,7 +129,7 @@ prom/prometheus \
 ```bash
 cosign verify \
 --key=./cosign.pub \
-ghcr.io/dazwilkin/aetos:1234567890123456789012345678901234567890
+ghcr.io/dazwilkin/aetos:bccd50033b9c4425a3e820dc3b5f42dbf83f4c3f
 ```
 
 > **NOTE** `cosign.pub` may be downloaded [here](./cosign.pub)
