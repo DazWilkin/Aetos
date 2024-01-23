@@ -11,10 +11,11 @@ FROM docker.io/golang:${GOLANG_VERSION} as build
 WORKDIR /aetos
 
 COPY go.* ./
+
+COPY api/ ./api
 COPY cmd/ ./cmd
 COPY collector ./collector
 COPY handler ./handler
-COPY protos ./protos
 COPY xxx ./xxx
 
 ARG GOOS

@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 
-	pb "github.com/DazWilkin/Aetos/protos"
+	"github.com/DazWilkin/Aetos/api/v1alpha1"
 	"github.com/DazWilkin/Aetos/xxx"
 
 	"google.golang.org/protobuf/encoding/protojson"
@@ -35,7 +35,7 @@ func (p *Publisher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Request should unmarshal to pb.AetosPublishRequest
-	rqst := &pb.AetosPublishRequest{}
+	rqst := &v1alpha1.AetosPublishRequest{}
 	if err := protojson.Unmarshal(body, rqst); err != nil {
 		// Expected request body to unmarshal
 		w.WriteHeader(http.StatusBadRequest)

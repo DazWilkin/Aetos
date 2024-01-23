@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package com.dazwilkin.aetos.v1;
+package aetos.v1alpha1;
 
-option go_package = "github.com/DazWilkin/Aetos/protos";
+option go_package = "github.com/DazWilkin/Aetos/api/v1alpha1";
 
 service Aetos {
     rpc Publish(AetosPublishRequest) returns (AetosPublishResponse);

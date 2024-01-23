@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	pb "github.com/DazWilkin/Aetos/protos"
+	"github.com/DazWilkin/Aetos/api/v1alpha1"
 
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -39,15 +39,15 @@ func NewConfig(cardinality, numLabels, numMetrics uint8) *Config {
 }
 
 // Get is a method that gets the Config as a protobuf message
-func (c *Config) Get() *pb.AetosPublishRequest {
-	return &pb.AetosPublishRequest{
+func (c *Config) Get() *v1alpha1.AetosPublishRequest {
+	return &v1alpha1.AetosPublishRequest{
 		Labels:  c.labels,
 		Metrics: c.metrics,
 	}
 }
 
 // Set is a method that sets the Config using a protobuf message
-func (c *Config) Set(rqst *pb.AetosPublishRequest) error {
+func (c *Config) Set(rqst *v1alpha1.AetosPublishRequest) error {
 	if len(rqst.Labels) == 0 {
 		return fmt.Errorf("labels must be non-empty")
 	}

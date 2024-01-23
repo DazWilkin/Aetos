@@ -14,6 +14,7 @@ import (
 	"github.com/DazWilkin/Aetos/xxx"
 
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
@@ -71,6 +72,13 @@ func main() {
 	config := xxx.NewConfig(uint8(*cardinality), uint8(*labels), uint8(*metrics))
 
 	registry := prometheus.NewRegistry()
+	registry.MustRegister(
+		// collectors.NewGoCollector(
+		// 	collectors.WithGoCollectorRuntimeMetrics(),
+		// ),
+		collectors.NewBuildInfoCollector(),
+		// collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
+	)
 	registry.MustRegister(collector.NewAetosCollector(config))
 
 	mux := http.NewServeMux()
