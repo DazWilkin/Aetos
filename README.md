@@ -39,20 +39,20 @@ baz{a="...",b="...",c="..."}
 ```
 
 ```bash
-DATA="
+DATA='
 {
-    \"labels\":[
-        \"a\",
-        \"b\",
-        \"c\"
+    "labels":[
+        "a",
+        "b",
+        "c"
     ],
-    \"metrics\":[
-        \"foo\",
-        \"bar\",
-        \"baz\"
+    "metrics":[
+        "foo",
+        "bar",
+        "baz"
     ]
 }
-"
+'
 
 curl \
 --request POST \
