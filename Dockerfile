@@ -26,7 +26,7 @@ ARG VERSION
 
 RUN CGO_ENABLED=0 GOOS=${GOOS} GOARCH=${GOARCH} \
     go build \
-    -ldflags "-X main.Checksum=${CHECKSUM} -X main.Version=${VERSION}" \
+    -ldflags "-X main.checksum=${CHECKSUM} -X main.version=${VERSION}" \
     -a -installsuffix cgo \
     -o /go/bin/aetos \
     ./cmd
