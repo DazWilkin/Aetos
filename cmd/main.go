@@ -6,8 +6,6 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
-	"runtime"
-	"time"
 
 	"github.com/DazWilkin/Aetos/collector"
 	"github.com/DazWilkin/Aetos/handler"
@@ -25,14 +23,11 @@ const (
 )
 
 var (
-	// GitCommit is the git commit value and is expected to be set during build
-	GitCommit string
-	// GoVersion is the Golang runtime version
-	GoVersion = runtime.Version()
-	// OSVersion is the OS version (uname --kernel-release) and is expected to be set during build
-	OSVersion string
-	// StartTime is the start time of the exporter represented as a UNIX epoch
-	StartTime = time.Now().Unix()
+	// Path will be set to the GitHub repo
+	// Version
+	Version string
+	// Checksum is the git commit value and is expected to be set during build
+	Checksum string
 )
 var (
 	cardinality = flag.Uint("cardinality", 3, "Number of label values")

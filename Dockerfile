@@ -3,7 +3,7 @@ ARG GOLANG_VERSION=1.21.6
 ARG GOOS=linux
 ARG GOARCH=amd64
 
-ARG COMMIT
+ARG CHECKSUM
 ARG VERSION
 
 FROM docker.io/golang:${GOLANG_VERSION} as build
@@ -21,12 +21,12 @@ COPY xxx ./xxx
 ARG GOOS
 ARG GOARCH
 
+ARG CHECKSUM
 ARG VERSION
-ARG COMMIT
 
 RUN CGO_ENABLED=0 GOOS=${GOOS} GOARCH=${GOARCH} \
     go build \
-    -ldflags "-X main.OSVersion=${VERSION} -X main.GitCommit=${COMMIT}" \
+    -ldflags "-X main.Checksum=${CHECKSUM} -X main.Version=${VERSION}" \
     -a -installsuffix cgo \
     -o /go/bin/aetos \
     ./cmd
