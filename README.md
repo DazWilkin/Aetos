@@ -22,7 +22,9 @@ go run github.com/DazWilkin/Aetos/cmd \
 --path=/metrics
 ```
 
-## Publish
+## API
+
+### Publish
 
 ```bash
 DATA="
@@ -44,6 +46,30 @@ curl \
 --request POST \
 --data "${DATA}" \
 http://localhost:8080/publish
+```
+
+### Varz
+
+```bash
+curl \
+--silent \
+--request GET \
+http://localhost:8080/varz \
+| jq -r .
+```
+```JSON
+{
+  "labels": [
+    "a",
+    "b",
+    "c"
+  ],
+  "metrics": [
+    "foo",
+    "bar",
+    "baz"
+  ]
+}
 ```
 
 ## Metrics
@@ -70,3 +96,20 @@ aetos_collector_foo{a="a165efd196e17ba195ad4dc50028b39a",b="34f25f6f596e0e4a4711
 aetos_collector_foo{a="b39baf03412f39006635c8da36237ff0",b="f474ce9df880f0a1f5d810a7ab7a539d",c="caf9334ca1325a0ff28ec4b7c88aa06e"} 0.43778715739069657
 ```
 
+## Prometheus
+
+```bash
+PORT="9090"
+
+podman run \
+--interactive --tty --rm \
+--net=host \
+--volume=${PWD}/prometheus.yml:/etc/prometheus/prometheus.yml \
+prom/prometheus \
+--web.config.file=/etc/prometheus/prometheus.yml \
+--web.listen-address="0.0.0.0:${PORT}
+```
+
+<hr/>
+<br/>
+<a href="https://www.buymeacoffee.com/dazwilkin" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
