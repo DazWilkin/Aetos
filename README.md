@@ -122,6 +122,21 @@ prom/prometheus \
 --web.listen-address="0.0.0.0:${PORT}
 ```
 
+## Sigstore
+
+`aetos` container images are signed by [Sigstore](https://www.sigstore.dev/) and may be verified:
+
+```bash
+cosign verify \
+--key=./cosign.pub \
+ghcr.io/dazwilkin/aetos:1234567890123456789012345678901234567890
+```
+
+> **NOTE** `cosign.pub` may be downloaded [here](./cosign.pub)
+
+To install `cosign`, e.g.:
+
+
 <hr/>
 <br/>
 <a href="https://www.buymeacoffee.com/dazwilkin" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
