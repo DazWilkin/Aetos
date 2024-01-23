@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package com.dazwilkin.aetos.v1;
+
+option go_package = "github.com/DazWilkin/Aetos/protos";
+
+service Aetos {
+    rpc Publish(AetosPublishRequest) returns (AetosPublishResponse);
+}
+
+message AetosPublishRequest {
+    repeated string labels = 2;
+    repeated string metrics = 3;
+}
+message AetosPublishResponse {
+
+}
+
