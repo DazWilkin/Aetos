@@ -41,10 +41,6 @@ var (
 	path        = flag.String("path", "metrics", "Path on which metrics will be served")
 )
 
-func healthz(w http.ResponseWriter, _ *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("ok"))
-}
 func main() {
 	flag.Parse()
 
@@ -72,14 +68,18 @@ func main() {
 		"path", *path,
 	)
 
-	foo := xxx.NewFoo(uint8(*cardinality), uint8(*labels), uint8(*metrics))
+	config := xxx.NewConfig(uint8(*cardinality), uint8(*labels), uint8(*metrics))
 
 	registry := prometheus.NewRegistry()
-	registry.MustRegister(collector.NewAetosCollector(foo))
+	registry.MustRegister(collector.NewAetosCollector(config))
 
 	mux := http.NewServeMux()
-	mux.Handle("/publish", handler.NewPublisher(foo))
+	mux.Handle("/publish", handler.NewPublisher(config))
+
+	// z-pages
 	mux.Handle("/healthz", http.HandlerFunc(healthz))
+	mux.Handle("/statusz", http.HandlerFunc(statusz))
+	mux.Handle("/varz", handler.NewVarz(config))
 
 	opts := promhttp.HandlerOpts{
 		EnableOpenMetrics: true,

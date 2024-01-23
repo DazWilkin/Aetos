@@ -8,23 +8,28 @@ import (
 // Ensure that AetosCollector implements Prometheus' collector interface
 var _ prometheus.Collector = (*AetosCollector)(nil)
 
+// AetosCollector represents Aetos' dynamic metrics|labels
 type AetosCollector struct {
-	Foo *xxx.Foo
+	Config *xxx.Config
 }
 
-func NewAetosCollector(foo *xxx.Foo) *AetosCollector {
+// NewAetosCollector is a function that creates a new AetosCollector
+func NewAetosCollector(foo *xxx.Config) *AetosCollector {
 	return &AetosCollector{
-		Foo: foo,
+		Config: foo,
 	}
 }
 
+// Collect is a method that implements Prometheus' Collector interface and is used to collect metrics
 func (c *AetosCollector) Collect(ch chan<- prometheus.Metric) {
-	for _, metric := range c.Foo.Metrics() {
+	for _, metric := range c.Config.Metrics() {
 		ch <- metric
 	}
 }
+
+// Describe is a method that implements Prometheus' Collector interface and is used to describe metrics
 func (c *AetosCollector) Describe(ch chan<- *prometheus.Desc) {
-	for _, desc := range c.Foo.Descs() {
+	for _, desc := range c.Config.Descs() {
 		ch <- desc
 	}
 }

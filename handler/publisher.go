@@ -12,12 +12,12 @@ import (
 )
 
 type Publisher struct {
-	Foo *xxx.Foo
+	Config *xxx.Config
 }
 
-func NewPublisher(foo *xxx.Foo) *Publisher {
+func NewPublisher(config *xxx.Config) *Publisher {
 	return &Publisher{
-		Foo: foo,
+		Config: config,
 	}
 }
 func (p *Publisher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -44,18 +44,18 @@ func (p *Publisher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Validate AetosPublishRequest against Foo
-	if len(rqst.Labels) > int(p.Foo.NumLabels) {
+	if len(rqst.Labels) > int(p.Config.NumLabels) {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Too many labels (max: %d)", p.Foo.NumLabels)
+		fmt.Fprintf(w, "Too many labels (max: %d)", p.Config.NumLabels)
 		return
 	}
-	if len(rqst.Metrics) > int(p.Foo.NumMetrics) {
+	if len(rqst.Metrics) > int(p.Config.NumMetrics) {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Too many metrics (max: %d)", p.Foo.NumMetrics)
+		fmt.Fprintf(w, "Too many metrics (max: %d)", p.Config.NumMetrics)
 		return
 	}
 
 	// Update Foo
-	p.Foo.Update(rqst.Labels, rqst.Metrics)
+	p.Config.Set(rqst)
 
 }
