@@ -1,3 +1,5 @@
 # Cosign key
 cosign.key
 
+# Tailscale Operator Ingress
+ingress.tailscale.jsonnet
