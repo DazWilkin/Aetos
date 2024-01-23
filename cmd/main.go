@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
@@ -37,7 +38,7 @@ var (
 	endpoint    = flag.String("endpoint", ":8080", "Endpoint of ")
 	labels      = flag.Uint("labels", 2, "Number of Labels")
 	metrics     = flag.Uint("metrics", 5, "Number of Metrics")
-	path        = flag.String("path", "/metrics", "Path on which metrics will be served")
+	path        = flag.String("path", "metrics", "Path on which metrics will be served")
 )
 
 func healthz(w http.ResponseWriter, _ *http.Request) {
@@ -59,6 +60,17 @@ func main() {
 		slog.Info("Flag `--max_metrics` too large", "max", maxMetrics)
 		os.Exit(1)
 	}
+	if *path == "" {
+		slog.Info("Flag `--path` must be non-empty")
+		os.Exit(1)
+	}
+
+	slog.Info("Configuration",
+		"cardinality", *cardinality,
+		"labels", *labels,
+		"metrics", *metrics,
+		"path", *path,
+	)
 
 	foo := xxx.NewFoo(uint8(*cardinality), uint8(*labels), uint8(*metrics))
 
@@ -73,7 +85,7 @@ func main() {
 		EnableOpenMetrics: true,
 	}
 
-	mux.Handle("/metrics", promhttp.HandlerFor(registry, opts))
+	mux.Handle(fmt.Sprintf("/%s", *path), promhttp.HandlerFor(registry, opts))
 
 	http.ListenAndServe(*endpoint, mux)
 }

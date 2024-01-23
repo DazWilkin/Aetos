@@ -52,6 +52,7 @@ func (f *Foo) Update(labels, metrics []string) error {
 	return nil
 }
 func (f *Foo) Descs() []*prometheus.Desc {
+	mu.RLock()
 	result := make([]*prometheus.Desc, len(f.metrics))
 
 	for i, metric := range f.metrics {
@@ -63,9 +64,11 @@ func (f *Foo) Descs() []*prometheus.Desc {
 		)
 	}
 
+	mu.RUnlock()
 	return result
 }
 func (f *Foo) Metrics() []prometheus.Metric {
+	mu.RLock()
 	result := make([]prometheus.Metric, len(f.metrics)*int(f.Cardinality))
 
 	for i, desc := range f.Descs() {
@@ -92,6 +95,7 @@ func (f *Foo) Metrics() []prometheus.Metric {
 		}
 	}
 
+	mu.RUnlock()
 	return result
 }
 
