@@ -24,10 +24,10 @@ const (
 
 var (
 	// Path will be set to the GitHub repo
-	// Version
-	Version string
-	// Checksum is the git commit value and is expected to be set during build
-	Checksum string
+	// version
+	version string
+	// checksum is the git commit value and is expected to be set during build
+	checksum string
 )
 var (
 	cardinality = flag.Uint("cardinality", 3, "Number of label values")
@@ -38,6 +38,11 @@ var (
 )
 
 func main() {
+	slog.Info("Build",
+		"checksum", checksum,
+		"version", version,
+	)
+
 	flag.Parse()
 
 	if *cardinality > maxCardinality {
@@ -77,6 +82,11 @@ func main() {
 	registry.MustRegister(collector.NewAetosCollector(config))
 
 	mux := http.NewServeMux()
+
+	// Index handler
+	mux.HandleFunc("/", index)
+
+	// Publish handler
 	mux.Handle("/publish", handler.NewPublisher(config))
 
 	// z-pages

@@ -56,6 +56,10 @@ func (p *Publisher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update Foo
-	p.Config.Set(rqst)
+	if err := p.Config.Set(rqst); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
+	w.WriteHeader(http.StatusOK)
 }
