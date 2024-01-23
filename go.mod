@@ -1,6 +1,6 @@
 module github.com/DazWilkin/Aetos
 
-go 1.21.0
+go 1.21.6
 
 require (
 	github.com/prometheus/client_golang v1.18.0
