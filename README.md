@@ -134,9 +134,10 @@ aetos_collector_foo{a="a-2",b="b-2",c="c-2"} 0.1317955488606491
 IMAGE="ghcr.io/dazwilkin/aetos:65fd4ba6e663778d0a856253f083250bc0d6bcd8"
 PORT="8080"
 
-CARDINALITY="3"
-LABELS="3"
-METRICS="3"
+# Revise
+CARDINALITY="3" # Max  10
+LABELS="3"      # Max   5
+METRICS="3"     # Max 250
 
 NAMESPACE="aetos"
 
