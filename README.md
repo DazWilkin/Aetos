@@ -1,5 +1,9 @@
 [Aëtos](https://en.wikipedia.org/wiki/A%C3%ABtos)
 
+Named after the eagle that tested Prometheus.
+
+An exporter intended for testing Prometheus that can be configured dynamically (by `POST`'ing to its `/publish` endpoint see [publish](#publish)) to generate metrics with labels with random values
+
 ## Proto
 
 ```bash
@@ -25,6 +29,14 @@ go run github.com/DazWilkin/Aetos/cmd \
 ## API
 
 ### Publish
+
+The following will generate 3 metrics each with 3 labels:
+
+```
+foo{a="...",b="...",c="..."}
+bar{a="...",b="...",c="..."}
+baz{a="...",b="...",c="..."}
+```
 
 ```bash
 DATA="
@@ -74,7 +86,7 @@ http://localhost:8080/varz \
 
 ## Metrics
 
-Metrics will be empty until a configuration is `/publish`'ed (see [Publish](#Publish))
+Metrics will be empty until a configuration is `/publish`'ed (see [Publish](#publish))
 
 Then:
 
