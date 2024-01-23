@@ -213,7 +213,7 @@ podman run \
 --volume=${PWD}/prometheus.yml:/etc/prometheus/prometheus.yml \
 prom/prometheus \
 --web.config.file=/etc/prometheus/prometheus.yml \
---web.listen-address="0.0.0.0:${PORT}
+--web.listen-address="0.0.0.0:${PORT}"
 ```
 
 ## Tailscale
