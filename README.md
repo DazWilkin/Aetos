@@ -1,5 +1,7 @@
 [Aëtos](https://en.wikipedia.org/wiki/A%C3%ABtos)
 
+[![build](https://github.com/DazWilkin/Aetos/actions/workflows/build.yml/badge.svg)](https://github.com/DazWilkin/Aetos/actions/workflows/build.yml)
+
 Named after the eagle that tested Prometheus.
 
 An exporter intended for testing Prometheus that can be configured dynamically (by `POST`'ing to its `/publish` endpoint see [publish](#publish)) to generate metrics with labels with random values
@@ -106,6 +108,25 @@ aetos_collector_baz{a="b39baf03412f39006635c8da36237ff0",b="f474ce9df880f0a1f5d8
 aetos_collector_foo{a="737c191aed52450b9c655083c9971bdd",b="b1d10db2016c2f83c13b25fcb170cdeb",c="298a664f356e310dbaf9117a0d108b1e"} 0.7990841616320065
 aetos_collector_foo{a="a165efd196e17ba195ad4dc50028b39a",b="34f25f6f596e0e4a471136e00726093b",c="63e3dc58db6926e5fd33177aa05336f9"} 0.6949752807660148
 aetos_collector_foo{a="b39baf03412f39006635c8da36237ff0",b="f474ce9df880f0a1f5d810a7ab7a539d",c="caf9334ca1325a0ff28ec4b7c88aa06e"} 0.43778715739069657
+```
+
+## Kubernetes
+
+### Jsonnet
+
+```bash
+IMAGE="ghcr.io/dazwilkin/aetos:bccd50033b9c4425a3e820dc3b5f42dbf83f4c3f"
+PORT="8080"
+
+NAMESPACE="aetos"
+
+jsonnet \
+  ./kubernetes.jsonnet \
+  --ext-str image=${IMAGE} \
+  --ext-str port=${PORT} \
+| kubectl apply \
+  --filename=- \
+  --namespace=${NAMESPACE}
 ```
 
 ## Prometheus
