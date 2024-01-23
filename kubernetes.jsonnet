@@ -46,7 +46,7 @@ local metrics = "--metrics=" + std.extVar("metrics");
                   "name": "aetos",
                   "ports": [
                     {
-                      "name": "metrics",
+                      "name": "api",
                       "containerPort": port,
                       "protocol": "TCP"
                     }
@@ -89,10 +89,10 @@ local metrics = "--metrics=" + std.extVar("metrics");
           },
           "ports": [
             {
-              "name": "metrics",
+              "name": "api",
               "port": port,
               "protocol": "TCP",
-              "targetPort": "metrics"
+              "targetPort": "api"
             }
           ],
           "type": "NodePort"
@@ -115,7 +115,7 @@ local metrics = "--metrics=" + std.extVar("metrics");
           },
           "endpoints": [
             {
-              "port": "metrics",
+              "port": "api",
             }
           ]
         }
