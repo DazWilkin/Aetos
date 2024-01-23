@@ -240,7 +240,7 @@ jsonnet \
 ```bash
 cosign verify \
 --key=./cosign.pub \
-ghcr.io/dazwilkin/aetos:a31b5d7e82485e97a4f964f61fe058620978a0ca
+ghcr.io/dazwilkin/aetos:b40c1a50237b8a5b3f72c686cf3bdcc2099d0543
 ```
 
 > **NOTE** `cosign.pub` may be downloaded [here](./cosign.pub)
