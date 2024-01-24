@@ -9,7 +9,7 @@ var _ prometheus.Collector = (*BuildInfoCollector)(nil)
 
 // BuildInfoCollector collects metrics, mostly runtime, about this exporter in general.
 type BuildInfoCollector struct {
-	opts opts.Build
+	opts *opts.Build
 
 	// Metrics
 	startTime *prometheus.Desc
@@ -19,6 +19,7 @@ type BuildInfoCollector struct {
 // NewBuildInfoCollector returns a new ExporterCollector.
 func NewBuildInfoCollector(opts *opts.Build) *BuildInfoCollector {
 	return &BuildInfoCollector{
+		opts: opts,
 
 		startTime: prometheus.NewDesc(
 			prometheus.BuildFQName(opts.Namespace, opts.Subsystem, "start_time"),
