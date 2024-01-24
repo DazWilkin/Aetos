@@ -212,7 +212,7 @@ podman run \
 --net=host \
 --volume=${PWD}/prometheus.yml:/etc/prometheus/prometheus.yml \
 prom/prometheus \
---web.config.file=/etc/prometheus/prometheus.yml \
+--config.file=/etc/prometheus/prometheus.yml \
 --web.listen-address="0.0.0.0:${PORT}"
 ```
 
