@@ -8,11 +8,16 @@ An exporter intended for testing PromQL queries. The exporter is configured dyna
 
 ![Prometheus](./prometheus.png)
 
-> **NOTE** The PromQL used in the above uses the special label `__name__` to apply a regex to Aetos metrics (!) names (`aetos_colllector_foo`,`aetos_colllector_bar`,`aetos_colllector_baz`) to return them in one result (`{__name__=~"aetos_collector_(foo|bar|baz)}`).
+> **NOTE** The PromQL used in the above uses the special label `__name__` to apply a regex across 3 Aetos metric (!) names (`aetos_colllector_foo`,`aetos_colllector_bar`,`aetos_colllector_baz`) to return them as one result (`{__name__=~"aetos_collector_(foo|bar|baz)}`).
 
 ## Important
 
-Upon launch Aetos does not include any metrics other than `aetos_collector_build_info` which has a constant value of 1.
+Upon launch Aetos only includes two metrics:
+
+|Name|Type|Description|
+|----|----|-----------|
+|`aetos_collector_build_info`|Counter|A metric with a constant value of 1 but labeled with build info|
+|`aetos_collector_start_time`|Gauge|Aetos collector start time in Unix epoch seconds|
 
 ## protoc
 
@@ -135,6 +140,12 @@ foo{a="...",b="...",c="..."}
 bar{a="...",b="...",c="..."}
 baz{a="...",b="...",c="..."}
 ```
+
+|Name|Type|Description|
+|----|----|-----------|
+|`foo`|Gauge|a randomly generated metric with 3 labels with cardinality 3|
+|`bar`|Gauge|a randomly generated metric with 3 labels with cardinality 3|
+|`baz`|Gauge|a randomly generated metric with 3 labels with cardinality 3|
 
 ```bash
 DATA='
