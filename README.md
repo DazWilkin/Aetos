@@ -57,6 +57,8 @@ ${IMAGE} \
 --metrics=${METRICS}
 ```
 
+Then browse `http://localhost:{PORT}` replacing `{PORT}` with the value of `${PORT}`
+
 ### Kubernetes
 
 Uses [Jsonnet](https://jsonnet.org/) to generate the Kubernetes config.
@@ -97,6 +99,28 @@ kubectl get pod \
 ```console
 true
 ```
+
+If using Tailscale [Kubernetes operator](https://tailscale.com/kb/1236/kubernetes-operator) see [Tailscale](#tailscale)
+
+If you wish to simply proxy Aetos locally:
+
+```bash
+kubectl port-forward service/aetos \
+--namespace=${NAMESPACE}
+${PORT}:${PORT}
+```
+And then browse `http://localhost:{PORT}` replacing `{PORT}` with the value of `${PORT}`
+
+Or if you can access a cluster NodePort:
+
+```bash
+NODE_PORT=$(\
+  kubectl get service/aetos \
+  --namespace=${NAMESPACE} \
+  --output=jsonpath='{.spec.ports[?(@.name=="api")].nodePort}') && echo ${NODE_PORT}
+```
+
+And then browse `http://localhost:{NODE_PORT}` replacing `{NODE_PORT}` with the value of `${NODE_PORT}`
 
 ## API
 

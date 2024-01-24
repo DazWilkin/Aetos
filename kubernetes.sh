@@ -22,3 +22,7 @@ jsonnet \
 | kubectl apply \
   --filename=- \
   --namespace=${NAMESPACE}
+
+kubectl get deployment/aetos \
+--namespace=${NAMESPACE} \
+--output=jsonpath="{.spec.template.spec.containers[0].image}"
