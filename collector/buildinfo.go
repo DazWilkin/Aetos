@@ -9,7 +9,9 @@ var _ prometheus.Collector = (*BuildInfoCollector)(nil)
 
 // BuildInfoCollector collects metrics, mostly runtime, about this exporter in general.
 type BuildInfoCollector struct {
-	opts      opts.Build
+	opts opts.Build
+
+	// Metrics
 	startTime *prometheus.Desc
 	buildInfo *prometheus.Desc
 }

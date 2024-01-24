@@ -12,11 +12,10 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-// TODO(dazwilkin) Should this be part of the Config struct?
-var mu sync.RWMutex
-
 // Aetos is a type that represents the current configuration of metrics|labels
 type Aetos struct {
+	mu sync.RWMutex
+
 	namespace string
 	subsystem string
 
@@ -29,26 +28,26 @@ type Aetos struct {
 }
 
 // Get is a method that gets the Config as a protobuf message
-func (o *Aetos) Get() *v1alpha1.AetosPublishRequest {
+func (a *Aetos) Get() *v1alpha1.AetosPublishRequest {
 	return &v1alpha1.AetosPublishRequest{
-		Labels:  o.labels,
-		Metrics: o.metrics,
+		Labels:  a.labels,
+		Metrics: a.metrics,
 	}
 }
 
 // Set is a method that sets the Config using a protobuf message
-func (o *Aetos) Set(rqst *v1alpha1.AetosPublishRequest) error {
+func (a *Aetos) Set(rqst *v1alpha1.AetosPublishRequest) error {
 	if len(rqst.Labels) == 0 {
 		return fmt.Errorf("labels must be non-empty")
 	}
-	if len(rqst.Labels) > int(o.NumLabels) {
-		return fmt.Errorf("too many labels (max: %d)", o.NumLabels)
+	if len(rqst.Labels) > int(a.NumLabels) {
+		return fmt.Errorf("too many labels (max: %d)", a.NumLabels)
 	}
 	if len(rqst.Metrics) == 0 {
 		return fmt.Errorf("metrics must be non-empty")
 	}
-	if len(rqst.Metrics) > int(o.NumMetrics) {
-		return fmt.Errorf("too many metrics (max: %d)", o.NumMetrics)
+	if len(rqst.Metrics) > int(a.NumMetrics) {
+		return fmt.Errorf("too many metrics (max: %d)", a.NumMetrics)
 	}
 
 	slog.Info("Set",
@@ -56,57 +55,57 @@ func (o *Aetos) Set(rqst *v1alpha1.AetosPublishRequest) error {
 		"metrics", strings.Join(rqst.Metrics, ","),
 	)
 
-	mu.Lock()
-	o.labels = rqst.Labels
-	o.metrics = rqst.Metrics
-	mu.Unlock()
+	a.mu.Lock()
+	a.labels = rqst.Labels
+	a.metrics = rqst.Metrics
+	a.mu.Unlock()
 
 	return nil
 }
 
 // Descs is a method that represents the Config as a slice of prometheus.Desc
 // This method is used by the Metrics methods and by the collector's Describe method
-func (o *Aetos) Descs() []*prometheus.Desc {
-	mu.RLock()
-	result := make([]*prometheus.Desc, len(o.metrics))
+func (a *Aetos) Descs() []*prometheus.Desc {
+	a.mu.RLock()
+	result := make([]*prometheus.Desc, len(a.metrics))
 
-	for i, metric := range o.metrics {
+	for i, metric := range a.metrics {
 		result[i] = prometheus.NewDesc(
-			prometheus.BuildFQName(o.namespace, o.subsystem, metric),
-			fmt.Sprintf("a randomly generated metric with %d labels with cardinality %d", len(o.labels), o.cardinality),
-			o.labels,
+			prometheus.BuildFQName(a.namespace, a.subsystem, metric),
+			fmt.Sprintf("a randomly generated metric with %d labels with cardinality %d", len(a.labels), a.cardinality),
+			a.labels,
 			nil,
 		)
 	}
 
-	mu.RUnlock()
+	a.mu.RUnlock()
 	return result
 }
 
 // Metrics is a method that represents the Config as a slice of prometheus.Metric
 // This method is used by the collector's Collect method
-func (o *Aetos) Metrics() []prometheus.Metric {
-	mu.RLock()
-	result := make([]prometheus.Metric, len(o.metrics)*int(o.cardinality))
+func (a *Aetos) Metrics() []prometheus.Metric {
+	a.mu.RLock()
+	result := make([]prometheus.Metric, len(a.metrics)*int(a.cardinality))
 
 	// Enumerate each of the metrics (represented by prometheus.Desc)
-	for i, desc := range o.Descs() {
+	for i, desc := range a.Descs() {
 		// For each cardinality
 		// Effectively multiple the number of metrics
-		for j := uint8(0); j < o.cardinality; j++ {
+		for j := uint8(0); j < a.cardinality; j++ {
 			measurement := rand.Float64()
 
 			// Create a new set of label values for this measurement
-			labelValues := make([]string, len(o.labels))
-			for k := 0; k < len(o.labels); k++ {
+			labelValues := make([]string, len(a.labels))
+			for k := 0; k < len(a.labels); k++ {
 				// Value should be predicatable|repeatable
 				// Want the same label values across different metrics
 				// hash some combination of the label name and the cardinality
-				value := fmt.Sprintf("%s-%d", o.labels[k], j)
+				value := fmt.Sprintf("%s-%d", a.labels[k], j)
 				labelValues[k] = value // hash(value)
 			}
 
-			result[i*int(o.cardinality)+int(j)] = prometheus.MustNewConstMetric(
+			result[i*int(a.cardinality)+int(j)] = prometheus.MustNewConstMetric(
 				desc,
 				prometheus.GaugeValue,
 				measurement,
@@ -115,6 +114,6 @@ func (o *Aetos) Metrics() []prometheus.Metric {
 		}
 	}
 
-	mu.RUnlock()
+	a.mu.RUnlock()
 	return result
 }
