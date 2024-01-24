@@ -8,6 +8,8 @@ An exporter intended for testing PromQL queries. The exporter is configured dyna
 
 ![Prometheus](./prometheus.png)
 
+> **NOTE** The PromQL used in the above uses the special label `__name__` to apply a regex to Aetos metrics (!) names (`aetos_colllector_foo`,`aetos_colllector_bar`,`aetos_colllector_baz`) to return them in one result (`{__name__=~"aetos_collector_(foo|bar|baz)}`).
+
 ## Important
 
 Upon launch Aetos does not include any metrics other than `aetos_collector_build_info` which has a constant value of 1.
@@ -264,7 +266,9 @@ jsonnet \
 ```bash
 cosign verify \
 --key=./cosign.pub \
-ghcr.io/dazwilkin/aetos:b95b42af050ad30c1cc180d7ba2eb73cb4f8e5e5
+ghcr.io/dazwilkin/aetos:b95b42af050ad30c1cc180d7ba2eb73cb4f8e5e5 \
+2>/dev/null \
+| jq -r .
 ```
 
 > **NOTE** `cosign.pub` may be downloaded [here](./cosign.pub)
