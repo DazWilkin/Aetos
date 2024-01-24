@@ -39,7 +39,7 @@ go run github.com/DazWilkin/Aetos/cmd \
 ### Podman
 
 ```bash
-IMAGE="ghcr.io/dazwilkin/aetos:e7135834bdc6e4675b22c0d4c78671eb0077e92f"
+IMAGE="ghcr.io/dazwilkin/aetos:3006b9945c1bbabe0b9556ac507f9ee797432e74"
 PORT="8080"
 
 # Revise
@@ -62,7 +62,7 @@ ${IMAGE} \
 Uses [Jsonnet](https://jsonnet.org/) to generate the Kubernetes config.
 
 ```bash
-IMAGE="ghcr.io/dazwilkin/aetos:e7135834bdc6e4675b22c0d4c78671eb0077e92f"
+IMAGE="ghcr.io/dazwilkin/aetos:3006b9945c1bbabe0b9556ac507f9ee797432e74"
 PORT="8080"
 
 # Revise
@@ -240,7 +240,7 @@ jsonnet \
 ```bash
 cosign verify \
 --key=./cosign.pub \
-ghcr.io/dazwilkin/aetos:e7135834bdc6e4675b22c0d4c78671eb0077e92f
+ghcr.io/dazwilkin/aetos:3006b9945c1bbabe0b9556ac507f9ee797432e74
 ```
 
 > **NOTE** `cosign.pub` may be downloaded [here](./cosign.pub)
