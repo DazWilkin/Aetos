@@ -10,7 +10,7 @@ An exporter intended for testing PromQL queries. The exporter is configured dyna
 
 ## Important
 
-Upon launch Aetos does not include any metrics other than `go_build_info` which has a constant value of 1.
+Upon launch Aetos does not include any metrics other than `aetos_collector_build_info` which has a constant value of 1.
 
 ## protoc
 
