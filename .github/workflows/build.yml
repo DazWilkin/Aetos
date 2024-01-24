@@ -21,7 +21,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR }}
       - name: Set version
-        run: echo "VERSION=0.0.1" >> ${GITHUB_ENV}
+        run: echo "VERSION=$(uname --kernel-release)" >> ${GITHUB_ENV}
       - name: docker build && docker push
         # id used here in order to provide the output (digest) from this step to cosign sign
         # docker/build-push-action outputs are defined here:
@@ -32,7 +32,7 @@ jobs:
           context: .
           file: ./Dockerfile
           build-args: |
-            CHECKSUM=${{ github.sha }}
+            COMMIT=${{ github.sha }}
             VERSION=${{ env.VERSION }}
           tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
           push: true

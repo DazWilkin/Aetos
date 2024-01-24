@@ -3,23 +3,23 @@ package handler
 import (
 	"net/http"
 
-	"github.com/DazWilkin/Aetos/xxx"
+	"github.com/DazWilkin/Aetos/opts"
 
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
 type Varz struct {
-	Config *xxx.Config
+	opts *opts.Aetos
 }
 
-func NewVarz(config *xxx.Config) *Varz {
+func NewVarz(opts *opts.Aetos) *Varz {
 	return &Varz{
-		Config: config,
+		opts: opts,
 	}
 }
 
 func (v *Varz) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	b, err := protojson.Marshal(v.Config.Get())
+	b, err := protojson.Marshal(v.opts.Get())
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

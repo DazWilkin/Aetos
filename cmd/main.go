@@ -6,16 +6,21 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"runtime"
+	"time"
 
 	"github.com/DazWilkin/Aetos/collector"
 	"github.com/DazWilkin/Aetos/handler"
-	"github.com/DazWilkin/Aetos/xxx"
+	"github.com/DazWilkin/Aetos/opts"
 
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+const (
+	namespace string = "aetos"
+	subsystem string = "collector"
+)
 const (
 	maxCardinality uint = 10
 	maxLabels      uint = 5
@@ -23,11 +28,14 @@ const (
 )
 
 var (
-	// Path will be set to the GitHub repo
-	// version
-	version string
-	// checksum is the git commit value and is expected to be set during build
-	checksum string
+	// GitCommit is the git commit value and is expected to be set during build
+	GitCommit string
+	// GoVersion is the Golang runtime version
+	GoVersion = runtime.Version()
+	// OSVersion is the OS version (uname --kernel-release) and is expected to be set during build
+	OSVersion string
+	// StartTime is the start time of the exporter represented as a UNIX epoch
+	StartTime = time.Now().Unix()
 )
 var (
 	cardinality = flag.Uint("cardinality", 3, "Number of label values")
@@ -38,9 +46,11 @@ var (
 )
 
 func main() {
-	slog.Info("Build",
-		"checksum", checksum,
-		"version", version,
+	slog.Info("Configuration",
+		"GitCommit", GitCommit,
+		"GoVersion", GoVersion,
+		"OSVersion", OSVersion,
+		"StartTime", StartTime,
 	)
 
 	flag.Parse()
@@ -62,24 +72,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	slog.Info("Configuration",
-		"cardinality", *cardinality,
-		"labels", *labels,
-		"metrics", *metrics,
-		"path", *path,
-	)
-
-	config := xxx.NewConfig(uint8(*cardinality), uint8(*labels), uint8(*metrics))
+	opts := opts.NewOpts(namespace, subsystem)
+	optsBuild := opts.NewBuildOpts(GitCommit, GoVersion, OSVersion, StartTime)
+	optsAetos := opts.NewAetosOpts(uint8(*cardinality), uint8(*labels), uint8(*metrics))
 
 	registry := prometheus.NewRegistry()
-	registry.MustRegister(
-		// collectors.NewGoCollector(
-		// 	collectors.WithGoCollectorRuntimeMetrics(),
-		// ),
-		collectors.NewBuildInfoCollector(),
-		// collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
-	)
-	registry.MustRegister(collector.NewAetosCollector(config))
+	registry.MustRegister(collector.NewBuildInfoCollector(optsBuild))
+	registry.MustRegister(collector.NewAetosCollector(optsAetos))
 
 	mux := http.NewServeMux()
 
@@ -87,18 +86,18 @@ func main() {
 	mux.HandleFunc("/", index)
 
 	// Publish handler
-	mux.Handle("/publish", handler.NewPublisher(config))
+	mux.Handle("/publish", handler.NewPublisher(optsAetos))
 
 	// z-pages
 	mux.Handle("/healthz", http.HandlerFunc(healthz))
 	mux.Handle("/statusz", http.HandlerFunc(statusz))
-	mux.Handle("/varz", handler.NewVarz(config))
+	mux.Handle("/varz", handler.NewVarz(optsAetos))
 
-	opts := promhttp.HandlerOpts{
+	promOpts := promhttp.HandlerOpts{
 		EnableOpenMetrics: true,
 	}
 
-	mux.Handle(fmt.Sprintf("/%s", *path), promhttp.HandlerFor(registry, opts))
+	mux.Handle(fmt.Sprintf("/%s", *path), promhttp.HandlerFor(registry, promOpts))
 
 	http.ListenAndServe(*endpoint, mux)
 }

@@ -6,16 +6,16 @@ import (
 	"net/http"
 
 	"github.com/DazWilkin/Aetos/api/v1alpha1"
-	"github.com/DazWilkin/Aetos/xxx"
+	"github.com/DazWilkin/Aetos/opts"
 
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
 type Publisher struct {
-	Config *xxx.Config
+	Config *opts.Aetos
 }
 
-func NewPublisher(config *xxx.Config) *Publisher {
+func NewPublisher(config *opts.Aetos) *Publisher {
 	return &Publisher{
 		Config: config,
 	}
