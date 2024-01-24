@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-IMAGE="ghcr.io/dazwilkin/aetos:2fc114a0af320b8f4673bbd369131d2ca9b6f147"
+IMAGE="ghcr.io/dazwilkin/aetos:65bffe4ea8f7695b4cf5ce9535e2036e83380991"
 PORT="8080"
 
 # Revise
