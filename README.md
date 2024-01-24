@@ -1,6 +1,8 @@
 [Aëtos](https://en.wikipedia.org/wiki/A%C3%ABtos)
 
 [![build](https://github.com/DazWilkin/Aetos/actions/workflows/build.yml/badge.svg)](https://github.com/DazWilkin/Aetos/actions/workflows/build.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/DazWilkin/Aetos.svg)](https://pkg.go.dev/github.com/DazWilkin/Aetos)
+[![Go Report Card](https://goreportcard.com/badge/github.com/DazWilkin/Aetos)](https://goreportcard.com/report/github.com/DazWilkin/Aetos)
 
 Named after the eagle that tested Prometheus.
 
