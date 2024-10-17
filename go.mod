@@ -3,7 +3,7 @@ module github.com/DazWilkin/Aetos
 go 1.23.0
 
 require (
-	github.com/prometheus/client_golang v1.20.4
+	github.com/prometheus/client_golang v1.20.5
 	google.golang.org/protobuf v1.35.1
 )
 
