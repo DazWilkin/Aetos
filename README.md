@@ -48,7 +48,7 @@ go run github.com/DazWilkin/Aetos/cmd \
 ### Podman
 
 ```bash
-IMAGE="ghcr.io/dazwilkin/aetos:840b90de355320390cc70469304d31551c4489a8"
+IMAGE="ghcr.io/dazwilkin/aetos:93aa41b53b22e07939548d08a2b6ac2abe45c682"
 PORT="8080"
 
 # Revise
@@ -73,7 +73,7 @@ Then browse `http://localhost:{PORT}` replacing `{PORT}` with the value of `${PO
 Uses [Jsonnet](https://jsonnet.org/) to generate the Kubernetes config.
 
 ```bash
-IMAGE="ghcr.io/dazwilkin/aetos:840b90de355320390cc70469304d31551c4489a8"
+IMAGE="ghcr.io/dazwilkin/aetos:93aa41b53b22e07939548d08a2b6ac2abe45c682"
 PORT="8080"
 
 # Revise
@@ -279,7 +279,7 @@ jsonnet \
 ```bash
 cosign verify \
 --key=./cosign.pub \
-ghcr.io/dazwilkin/aetos:840b90de355320390cc70469304d31551c4489a8 \
+ghcr.io/dazwilkin/aetos:93aa41b53b22e07939548d08a2b6ac2abe45c682 \
 2>/dev/null \
 | jq -r .
 ```
