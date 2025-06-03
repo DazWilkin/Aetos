@@ -99,5 +99,7 @@ func main() {
 
 	mux.Handle(fmt.Sprintf("/%s", *path), promhttp.HandlerFor(registry, promOpts))
 
-	http.ListenAndServe(*endpoint, mux)
+	slog.Error("unable to listen",
+		"err", http.ListenAndServe(*endpoint, mux),
+	)
 }

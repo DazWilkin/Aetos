@@ -23,14 +23,16 @@ func NewPublisher(config *opts.Aetos) *Publisher {
 func (p *Publisher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("expected POST"))
+		// Not ideal but there's no logger to use to handle the error
+		_, _ = w.Write([]byte("expected POST"))
 		return
 	}
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("unable to read request body"))
+		// Not ideal but there's no logger to use to handle the error
+		_, _ = w.Write([]byte("unable to read request body"))
 		return
 	}
 
@@ -39,19 +41,22 @@ func (p *Publisher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err := protojson.Unmarshal(body, rqst); err != nil {
 		// Expected request body to unmarshal
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("expected to be able to unmarshal request body"))
+		// Not ideal but there's no logger to use to handle the error
+		_, _ = w.Write([]byte("expected to be able to unmarshal request body"))
 		return
 	}
 
 	// Validate AetosPublishRequest against Foo
 	if len(rqst.Labels) > int(p.Config.NumLabels) {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Too many labels (max: %d)", p.Config.NumLabels)
+		// Not ideal but there's no logger to use to handle the error
+		_, _ = fmt.Fprintf(w, "Too many labels (max: %d)", p.Config.NumLabels)
 		return
 	}
 	if len(rqst.Metrics) > int(p.Config.NumMetrics) {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Too many metrics (max: %d)", p.Config.NumMetrics)
+		// Not ideal but there's no logger to use to handle the error
+		_, _ = fmt.Fprintf(w, "Too many metrics (max: %d)", p.Config.NumMetrics)
 		return
 	}
 

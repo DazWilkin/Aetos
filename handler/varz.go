@@ -27,5 +27,6 @@ func (v *Varz) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(b)
+	// Not ideal but there's no logger to use to handle the error
+	_, _ = w.Write(b)
 }
