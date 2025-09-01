@@ -4,7 +4,7 @@ go 1.24.3
 
 require (
 	github.com/prometheus/client_golang v1.23.0
-	google.golang.org/protobuf v1.36.6
+	google.golang.org/protobuf v1.36.8
 )
 
 require (
